@@ -89,6 +89,14 @@ const renderNodeToOutput = (
 		}
 
 		if (node.nodeName === 'ink-box') {
+			if (yogaNode.getPositionType() === Yoga.POSITION_TYPE_ABSOLUTE) {
+				const width = yogaNode.getComputedWidth();
+				const height = yogaNode.getComputedHeight();
+				for (let i = 0; i < height; i += 1) {
+					output.write(x, y + i, ' '.repeat(width), {transformers: []});
+				}
+			}
+
 			renderBorder(x, y, node, output);
 		}
 

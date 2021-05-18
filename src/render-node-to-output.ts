@@ -1,6 +1,7 @@
 import Yoga from 'yoga-layout-prebuilt';
 import widestLine from 'widest-line';
 import indentString from 'indent-string';
+import ansiStyles from 'ansi-styles';
 import wrapText from './wrap-text';
 import getMaxWidth from './get-max-width';
 import squashTextNodes from './squash-text-nodes';
@@ -93,7 +94,9 @@ const renderNodeToOutput = (
 				const width = yogaNode.getComputedWidth();
 				const height = yogaNode.getComputedHeight();
 				for (let i = 0; i < height; i += 1) {
-					output.write(x, y + i, ' '.repeat(width), {transformers: []});
+					output.write(x, y + i, ansiStyles.reset.open + ' '.repeat(width), {
+						transformers: []
+					});
 				}
 			}
 

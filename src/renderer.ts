@@ -20,7 +20,8 @@ export default (node: DOMElement, terminalWidth: number): Result => {
 			height: node.yogaNode.getComputedHeight()
 		});
 
-		renderNodeToOutput(node, output, {skipStaticElements: true});
+		const absoluteNodes = new Set<{offsetX: number; offsetY: number; node: DOMElement}>();
+		renderNodeToOutput(node, output, {skipStaticElements: true, absoluteNodes});
 
 		let staticOutput;
 
@@ -34,6 +35,10 @@ export default (node: DOMElement, terminalWidth: number): Result => {
 				skipStaticElements: false
 			});
 		}
+
+		absoluteNodes.forEach(({offsetX, offsetY, node}) => {
+			renderNodeToOutput(node, output, {skipStaticElements: true, offsetX, offsetY});
+		});
 
 		const {output: generatedOutput, height: outputHeight} = output.get();
 

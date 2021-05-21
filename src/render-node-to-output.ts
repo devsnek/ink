@@ -38,13 +38,15 @@ const renderNodeToOutput = (
 		offsetY?: number;
 		transformers?: OutputTransformer[];
 		skipStaticElements: boolean;
+		absoluteNodes?: Set<{offsetX: number; offsetY: number; node: DOMElement}>;
 	}
 ) => {
 	const {
 		offsetX = 0,
 		offsetY = 0,
 		transformers = [],
-		skipStaticElements
+		skipStaticElements,
+		absoluteNodes
 	} = options;
 
 	if (skipStaticElements && node.internal_static) {
@@ -55,6 +57,14 @@ const renderNodeToOutput = (
 
 	if (yogaNode) {
 		if (yogaNode.getDisplay() === Yoga.DISPLAY_NONE) {
+			return;
+		}
+
+		if (
+			absoluteNodes &&
+			yogaNode.getPositionType() === Yoga.POSITION_TYPE_ABSOLUTE
+		) {
+			absoluteNodes.add({offsetX, offsetY, node});
 			return;
 		}
 
@@ -109,7 +119,8 @@ const renderNodeToOutput = (
 					offsetX: x,
 					offsetY: y,
 					transformers: newTransformers,
-					skipStaticElements
+					skipStaticElements,
+					absoluteNodes
 				});
 			}
 		}
